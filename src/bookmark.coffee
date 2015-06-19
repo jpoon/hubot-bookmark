@@ -17,7 +17,7 @@ module.exports = (robot) ->
     description = msg.match[2]
 
     urlPattern = /// ^                        # begin of line
-       (http(s)?://)?                       # optional http/https
+       (http(s)?://)?                         # optional http/https
        ([\w-]+\.)+[\w-]+(/[\w-;,./?{}%&=]*)?  # domain name with at least two components, allow trailing dot
        $ ///i                                 # end of line and ignore case
 
@@ -30,7 +30,7 @@ module.exports = (robot) ->
 
       bookmark.add link, (err, message) ->
         if err?
-          msg.reply "I have a vague memory of hearing about that bookmark link sometime in the past."
+          msg.reply "I have a vague memory of that same bookmark link."
         else
           msg.reply "I've stuck that bookmark into my robot brain."
 
