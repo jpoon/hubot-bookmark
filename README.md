@@ -11,7 +11,7 @@ Manage bookmarks with Hubot. Bookmarks get stored in the robot brain.
 In hubot project repo, run:
 
 ```bash
-$ npm install hubot-bookmark--save
+$ npm install hubot-bookmark --save
 ```
 
 Then add **hubot-bookmark** to your `external-scripts.json`:
