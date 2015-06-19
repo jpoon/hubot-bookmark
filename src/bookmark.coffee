@@ -16,10 +16,11 @@ module.exports = (robot) ->
     url = msg.match[1]
     description = msg.match[2]
 
-    urlPattern = /// ^                        # begin of line
-       (http(s)?://)?                         # optional http/https
-       ([\w-]+\.)+[\w-]+(/[\w-;,./?{}%&=]*)?  # domain name with at least two components, allow trailing dot
-       $ ///i                                 # end of line and ignore case
+    urlPattern = /// ^                       # begin of line
+      (http(s)?://)?                         # optional http/https
+      ([\w-]+\.)+[\w-]+(/[\w-;,./?{}%&=]*)?  # domain name with at least two
+                                             # components, allow trailing dot
+      $ ///i                                 # end of line and ignore case
 
     match = url.match urlPattern
     if !url.match urlPattern
@@ -40,12 +41,12 @@ module.exports = (robot) ->
     bookmark = new Bookmark robot
 
     bookmark.find description, (links) ->
-        message = "Found " + links.length + " link(s)"
-        if links.length > 0
-            message += ":\n\n"
-        for link in links
-            message += link.description + " (" + link.url + ")\n"
-        msg.reply message
+      message = "Found " + links.length + " link(s)"
+      if links.length > 0
+        message += ":\n\n"
+      for link in links
+        message += link.description + " (" + link.url + ")\n"
+      msg.reply message
 
   # bookmark list
   robot.respond /bookmark list/i, (msg) ->
