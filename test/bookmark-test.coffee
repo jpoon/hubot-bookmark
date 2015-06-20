@@ -25,6 +25,9 @@ describe 'bookmark', ->
       { url: 'https://google.com', success: true },
       { url: 'www.google.com', success: true },
       { url: 'google.com', success: true },
+      { url: 'http://google', success: true },
+      { url: 'https://google', success: true },
+      { url: 'google.com/test/?foo=bar&foo1=bar1', success: true },
       { url: 'google', success: false },
     ];
 

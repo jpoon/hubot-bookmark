@@ -16,16 +16,18 @@ module.exports = (robot) ->
     url = msg.match[1]
     description = msg.match[2]
 
-    urlPattern = /// ^                       # begin of line
+    internetUrlPattern = /// ^               # begin of line
       (http(s)?://)?                         # optional http/https
       ([\w-]+\.)+[\w-]+(/[\w-;,./?{}%&=]*)?  # domain name with at least two
                                              # components, allow trailing dot
       $ ///i                                 # end of line and ignore case
 
-    match = url.match urlPattern
-    if !url.match urlPattern
-      msg.reply "Is that even a URL?"
-    else
+    intranetUrlPattern = /// ^               # begin of line
+      http(s)?://                            # http/https
+      [\w-]+(/[\w-;,./?{}%&=]*)?             # domain name
+      $ ///i                                 # end of line and ignore case
+
+    if (url.match intranetUrlPattern) or (url.match internetUrlPattern)
       link = new Link url, description
       bookmark = new Bookmark robot
 
@@ -34,6 +36,8 @@ module.exports = (robot) ->
           msg.reply "I have a vague memory of that same bookmark link."
         else
           msg.reply "I've stuck that bookmark into my robot brain."
+    else
+      msg.reply "Is that even a URL?"
 
   # bookmark find <description>
   robot.respond /bookmark find (.+)/i, (msg) ->
