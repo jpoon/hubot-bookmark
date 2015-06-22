@@ -4,7 +4,8 @@
 # Commands:
 #   hubot bookmark add <url> as <description> - add a url to the robot brain
 #   hubot bookmark find <description> - find a link by description
-#   hubot bookmark list - List all of the links that are being tracked
+#   hubot bookmark list - list all of the links that are being tracked
+#   hubot bookmark delete <url> - delete url from robot brain
 #
 # Authors:
 #   Jason Poon <github@jasonpoon.ca>
@@ -18,7 +19,7 @@ module.exports = (robot) ->
 
     internetUrlPattern = /// ^               # begin of line
       (http(s)?://)?                         # optional http/https
-      ([\w-]+\.)+[\w-]+(/[\w-;,./?{}%&=]*)?  # domain name with at least two
+      ([\w-]+\.)+[\w-]+(/[\w-;,./?{}%&=@]*)? # domain name with at least two
                                              # components, allow trailing dot
       $ ///i                                 # end of line and ignore case
 
@@ -29,21 +30,21 @@ module.exports = (robot) ->
 
     if (url.match intranetUrlPattern) or (url.match internetUrlPattern)
       link = new Link url, description
-      bookmark = new Bookmark robot
 
+      bookmark = new Bookmark robot
       bookmark.add link, (err, message) ->
         if err?
           msg.reply "I have a vague memory of that same bookmark link."
         else
-          msg.reply "I've stuck that bookmark into my robot brain."
+          msg.reply "Sweet photons. I don't know if that bookmark was a wave or particle, but it went down smooth."
     else
-      msg.reply "Is that even a URL?"
+      msg.reply "Bite my shiny metal daffodil. I need a URL and that ain't one."
 
   # bookmark find <description>
   robot.respond /bookmark find (.+)/i, (msg) ->
     description = msg.match[1]
-    bookmark = new Bookmark robot
 
+    bookmark = new Bookmark robot
     bookmark.find description, (links) ->
       message = "Found " + links.length + " link(s)"
       if links.length > 0
@@ -55,16 +56,27 @@ module.exports = (robot) ->
   # bookmark list
   robot.respond /bookmark list/i, (msg) ->
     bookmark = new Bookmark robot
-
     bookmark.list (links) ->
       if links.length > 0
-        message = "These are the links I'm remembering:\n\n"
+        message = "It's just like making love! Y'know...left, down...rotate 62 degrees...engage rotor..."
         for link in links
           if link
             message += link.description + " (" + link.url + ")\n"
         msg.reply message
       else
-        msg.reply "Bookmarks? What bookmarks? I don't remember any bookmarks."
+        msg.reply "Please insert liquor. My robot brain is empty."
+
+  # bookmark delete <url>
+  robot.respond /bookmark delete (.+)/i, (msg) ->
+    url = msg.match[1]
+
+    bookmark = new Bookmark robot
+    bookmark.delete url, (deleted) ->
+      if deleted
+        msg.reply "It has been forgotten."
+      else
+        msg.reply "I have no memory of that bookmark in my robot brain."
+
 
 # Classes
 class Link
@@ -83,7 +95,7 @@ class Bookmark
     result = []
     @all().forEach (entry) ->
       if entry
-        if entry.url is link.url
+        if entry.url.toUpperCase() is link.url.toUpperCase()
           result.push link
     if result.length > 0
       callback "Link already exists"
@@ -101,3 +113,16 @@ class Bookmark
         if RegExp(description, "i").test link.description
           result.push link
     callback result
+
+  delete: (url, callback) ->
+    result = []
+    @all().forEach (link, i) =>
+      if link && link.url
+        if link.url.toUpperCase() is url.toUpperCase()
+          @all().splice(i, 1)
+          result.push i
+
+    if result.length > 0
+      callback true
+    else
+      callback false

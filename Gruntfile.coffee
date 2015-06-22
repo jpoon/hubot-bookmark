@@ -11,10 +11,10 @@ module.exports = (grunt) ->
         src: ["test/**/*.coffee"]
 
     coffeelint:
-      app: ["src/*.coffee"]
-      tests:
-        files:
-          src: ["tests/*.coffee"]
+      app: ["src/*.coffee", "test/*.coffee"]
+      options:
+        max_line_length:
+          level: 'ignore'
 
     release:
       options:
@@ -36,5 +36,5 @@ module.exports = (grunt) ->
   # load all grunt tasks
   require("matchdep").filterDev("grunt-*").forEach grunt.loadNpmTasks
   grunt.registerTask "test", ['mochaTest']
-  grunt.registerTask "default", ['test', 'coffeelint']
+  grunt.registerTask "default", ['coffeelint', 'test']
   return
