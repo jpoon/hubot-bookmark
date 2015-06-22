@@ -1,7 +1,7 @@
 {
   "name": "hubot-bookmark",
   "description": "A hubot script to save bookmarks",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Jason Poon <github@jasonpoon.ca>",
   "license": "MIT",
   "keywords": [
