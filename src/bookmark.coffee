@@ -58,10 +58,10 @@ module.exports = (robot) ->
     bookmark = new Bookmark robot
     bookmark.list (links) ->
       if links.length > 0
-        message = "It's just like making love! Y'know...left, down...rotate 62 degrees...engage rotor..."
+        message = "It's just like making love! Y'know...left, down...rotate 62 degrees...engage rotor...\n\n"
         for link in links
           if link
-            message += link.description + " (" + link.url + ")\n"
+            message += "* " + link.description + " (" + link.url + ")\n"
         msg.reply message
       else
         msg.reply "Please insert liquor. My robot brain is empty."
