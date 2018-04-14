@@ -1,5 +1,5 @@
 Helper = require('hubot-test-helper')
-helper = new Helper('../src')
+helper = new Helper('../src/bookmark.coffee')
 
 _ = require 'lodash'
 chai = require 'chai'
@@ -34,77 +34,74 @@ describe 'bookmark', ->
 
     tests.forEach (test) ->
       it test.url, ->
-        @room.user.say 'user', 'hubot bookmark add ' + test.url + ' as ' + test.url
-
-        if test.success
-          expect(@lastMessage()).to.contain(successMsg)
-        else
-          expect(@lastMessage()).to.contain(failureMsg)
+        @room.user.say('alice', '@hubot bookmark add ' + test.url + ' as ' + test.url).then =>
+          if test.success
+            expect(@lastMessage()).to.contain(successMsg)
+          else
+            expect(@lastMessage()).to.contain(failureMsg)
 
     it 'duplicate', ->
       url = 'www.test-url-.com'
-      @room.user.say 'user', 'hubot bookmark add ' + url + ' as ' + url
-      @room.user.say 'user', 'hubot bookmark add ' + url + ' as ' + url
-      expect(@lastMessage()).to.contain('I have a vague memory of that same bookmark link.')
+      @room.user.say('user', 'hubot bookmark add ' + url + ' as ' + url).then =>
+        @room.user.say('user', 'hubot bookmark add ' + url + ' as ' + url).then =>
+          expect(@lastMessage()).to.contain('I have a vague memory of that same bookmark link.')
 
     it 'case insensitive', ->
-      @room.user.say 'user', 'hubot bookmark add CASEINSENSITIVE.com as test'
-      @room.user.say 'user', 'hubot bookmark add caseinsensitive.com as test1'
-      expect(@lastMessage()).to.contain('I have a vague memory of that same bookmark link.')
+      @room.user.say('user', 'hubot bookmark add CASEINSENSITIVE.com as test').then =>
+        @room.user.say('user', 'hubot bookmark add caseinsensitive.com as test1').then =>
+          expect(@lastMessage()).to.contain('I have a vague memory of that same bookmark link.')
 
   describe 'find', ->
     it 'no results', ->
-      @room.user.say 'user', 'hubot bookmark find search-term'
-      expect(@lastMessage()).to.contain('0 link(s)')
+      @room.user.say('user', 'hubot bookmark find search-term').then =>
+        expect(@lastMessage()).to.contain('0 link(s)')
 
     it 'result', ->
-      @room.user.say 'user', 'hubot bookmark add test-url-1.com as test-description-1'
-      @room.user.say 'user', 'hubot bookmark add test-url-2.com as test-description-2'
-      @room.user.say 'user', 'hubot bookmark find description'
-      expect(@lastMessage()).to.contain('2 link(s)')
-      expect(@lastMessage()).to.contain('test-url-1')
-      expect(@lastMessage()).to.contain('test-url-2')
+      @room.user.say('user', 'hubot bookmark add test-url-1.com as test-description-1').then =>
+        @room.user.say('user', 'hubot bookmark add test-url-2.com as test-description-2').then =>
+          @room.user.say('user', 'hubot bookmark find description').then =>
+            expect(@lastMessage()).to.contain('2 link(s)')
+            expect(@lastMessage()).to.contain('test-url-1')
+            expect(@lastMessage()).to.contain('test-url-2')
 
   describe 'find', ->
     it 'no results', ->
-      @room.user.say 'user', 'hubot bookmark find search-term'
-      expect(@lastMessage()).to.contain('0 link(s)')
-
-    it '1 result', ->
+      @room.user.say('user', 'hubot bookmark find search-term').then =>
+        expect(@lastMessage()).to.contain('0 link(s)')
 
   describe 'list', ->
     it 'empty', ->
-      @room.user.say 'user', 'hubot bookmark list'
-      expect(@lastMessage()).to.contain('Please insert liquor. My robot brain is empty.')
+      @room.user.say('user', 'hubot bookmark list').then =>
+        expect(@lastMessage()).to.contain('Please insert liquor. My robot brain is empty.')
 
     it '1 item', ->
       url = 'test-url.com'
       description = 'test-description'
-      @room.user.say 'user', 'hubot bookmark add ' + url + ' as ' + description
-      @room.user.say 'user', 'hubot bookmark list'
-      expect(@lastMessage()).to.contain(url)
-      expect(@lastMessage()).to.contain(description)
+      @room.user.say('user', 'hubot bookmark add ' + url + ' as ' + description).then =>
+        @room.user.say('user', 'hubot bookmark list').then =>
+          expect(@lastMessage()).to.contain(url)
+          expect(@lastMessage()).to.contain(description)
 
   describe 'delete', ->
     it 'unknown url', ->
-      @room.user.say 'user', 'hubot bookmark delete www.test-url.com'
-      expect(@lastMessage()).to.contain("I have no memory of that bookmark in my robot brain.")
+      @room.user.say('user', 'hubot bookmark delete www.test-url.com').then =>
+        expect(@lastMessage()).to.contain("I have no memory of that bookmark in my robot brain.")
 
     it 'basic delete', ->
       url = 'test-url.com'
       description = 'test-description'
-      @room.user.say 'user', 'hubot bookmark add ' + url + ' as ' + description
-      @room.user.say 'user', 'hubot bookmark delete ' + url
-      expect(@lastMessage()).to.contain("It has been forgotten.")
-      @room.user.say 'user', 'hubot bookmark list'
-      expect(@lastMessage()).to.contain('Please insert liquor. My robot brain is empty.')
+      @room.user.say('user', 'hubot bookmark add ' + url + ' as ' + description).then =>
+        @room.user.say('user', 'hubot bookmark delete ' + url).then =>
+          expect(@lastMessage()).to.contain("It has been forgotten.")
+          @room.user.say('user', 'hubot bookmark list').then =>
+            expect(@lastMessage()).to.contain('Please insert liquor. My robot brain is empty.')
 
     it 'exact url match', ->
-      @room.user.say 'user', 'hubot bookmark add test.com as test-description-1'
-      @room.user.say 'user', 'hubot bookmark delete test'
-      expect(@lastMessage()).to.contain("I have no memory of that bookmark in my robot brain.")
+      @room.user.say('user', 'hubot bookmark add test.com as test-description-1').then =>
+        @room.user.say('user', 'hubot bookmark delete test').then =>
+          expect(@lastMessage()).to.contain("I have no memory of that bookmark in my robot brain.")
 
     it 'case insensitive', ->
-      @room.user.say 'user', 'hubot bookmark add TeSt123.cOm as test-description-1'
-      @room.user.say 'user', 'hubot bookmark delete test123.COM'
-      expect(@lastMessage()).to.contain("It has been forgotten.")
+      @room.user.say('user', 'hubot bookmark add TeSt123.cOm as test-description-1').then =>
+        @room.user.say('user', 'hubot bookmark delete test123.COM').then =>
+          expect(@lastMessage()).to.contain("It has been forgotten.")

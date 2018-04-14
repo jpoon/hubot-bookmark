@@ -1,13 +1,12 @@
-# hubot-bookmark
-
 [![Build Status](http://img.shields.io/travis/jpoon/hubot-bookmark.svg)](https://travis-ci.org/jpoon/hubot-bookmark)
 
-## Wat
+# hubot-bookmark
+
 Manage bookmarks with Hubot. Bookmarks get stored in the robot brain.
 
 ## Installation
 
-In hubot project repo, run:
+In the hubot project repo, run:
 
 ```bash
 $ npm install hubot-bookmark --save
